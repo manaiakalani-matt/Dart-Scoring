@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dart Checkout Flash Trainer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0b0b0b;
+        --surface: #151515;
+        --surface-2: #202020;
+        --text: #f8f8f8;
+        --muted: #a0a0a0;
+        --orange: #ff7a00;
+        --orange-2: #ff9d2e;
+        --green: #25d366;
+        --danger: #ff3d3d;
+        --shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+        --radius: 18px;
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        background: radial-gradient(circle at top, #1c1c1c 0%, var(--bg) 45%);
+        color: var(--text);
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 1rem;
+      }
+
+      .app {
+        width: min(960px, 100%);
+        background: linear-gradient(145deg, #181818, #111111);
+        border: 1px solid #262626;
+        border-radius: 24px;
+        box-shadow: var(--shadow);
+        padding: 1.1rem;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.4rem 0.4rem 1rem;
+        border-bottom: 1px solid #2b2b2b;
+      }
+
+      .title { margin: 0; font-size: clamp(1.2rem, 3.3vw, 1.8rem); color: var(--orange-2); }
+      .subtitle { margin: 0.2rem 0 0; color: var(--muted); font-size: 0.95rem; }
+
+      .score {
+        text-align: right;
+        font-weight: 700;
+      }
+      .score strong { color: var(--orange-2); font-size: 1.2rem; }
+
+      .toolbar {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 0.6rem;
+        margin: 1rem 0;
+      }
+
+      button, select {
+        appearance: none;
+        border: 1px solid #323232;
+        background: var(--surface);
+        color: var(--text);
+        padding: 0.66rem 0.8rem;
+        border-radius: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.14s ease, border-color 0.14s ease;
+      }
+
+      button:hover, select:hover { border-color: var(--orange); }
+      button:active { transform: translateY(1px) scale(0.99); }
+
+      .primary {
+        background: linear-gradient(130deg, var(--orange), #ff5f00);
+        border-color: #ff8f39;
+        color: #140d00;
+      }
+
+      .flashcard {
+        background: linear-gradient(180deg, var(--surface), #121212);
+        border: 1px solid #2e2e2e;
+        border-radius: var(--radius);
+        padding: 1rem;
+        min-height: 480px;
+      }
+
+      .target {
+        font-size: clamp(2.2rem, 9vw, 4.6rem);
+        font-weight: 800;
+        text-align: center;
+        color: var(--orange-2);
+        margin-bottom: 0.4rem;
+      }
+
+      .route { margin-top: 0.8rem; display: grid; gap: 0.75rem; }
+      .throw-step {
+        background: var(--surface-2);
+        border: 1px solid #383838;
+        border-left: 6px solid var(--orange);
+        border-radius: 12px;
+        padding: 0.8rem;
+      }
+
+      .throw-label { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+      .throw-main { font-size: 1.35rem; font-weight: 800; margin-top: 0.2rem; }
+      .left { color: var(--orange-2); font-size: 1rem; margin-top: 0.2rem; }
+
+      .hidden .route { filter: blur(9px); pointer-events: none; user-select: none; }
+
+      .status {
+        margin-top: 1rem;
+        display: flex;
+        justify-content: space-between;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .answers {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.6rem;
+        margin-top: 0.9rem;
+      }
+
+      .good { border-color: #2f7e4e; color: #9dffc5; }
+      .bad { border-color: #7e2f2f; color: #ffb2b2; }
+
+      @media (max-width: 860px) {
+        .toolbar { grid-template-columns: repeat(2, minmax(0,1fr)); }
+        .answers { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <header class="header">
+        <div>
+          <h1 class="title">🎯 Dart Checkout Flash Trainer</h1>
+          <p class="subtitle">Orange & black rapid-fire study mode with "what's left" memory cues.</p>
+        </div>
+        <div class="score">
+          Score<br /><strong id="score">0 / 0</strong>
+        </div>
+      </header>
+
+      <div class="toolbar">
+        <select id="rangeSelect">
+          <option value="all">All checkouts (2-170)</option>
+          <option value="pro">Pro combo zone (60-170)</option>
+          <option value="big">Big fish (100-170)</option>
+          <option value="doubles">Double finishes (2-40)</option>
+        </select>
+        <button id="newBtn" class="primary">New Card</button>
+        <button id="revealBtn">Reveal / Hide</button>
+        <button id="easyBtn">Knew it ✅</button>
+        <button id="hardBtn">Missed it ❌</button>
+      </div>
+
+      <section id="card" class="flashcard hidden">
+        <div class="target" id="target">—</div>
+        <div class="route" id="route"></div>
+      </section>
+
+      <div class="answers">
+        <button id="nextAfterCorrect">Next unseen card</button>
+        <button id="shuffleBtn">Shuffle deck</button>
+        <button id="resetBtn">Reset score</button>
+      </div>
+
+      <footer class="status">
+        <span id="statusLeft">Ready.</span>
+        <span id="statusSeen">Seen: 0</span>
+      </footer>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
