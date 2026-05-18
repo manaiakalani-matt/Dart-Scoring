@@ -87,7 +87,7 @@ function render() {
   const card = el("card");
   if (!current) return;
   el("target").textContent = current.score;
-  card.classList.toggle("hidden", !revealed);
+  card.classList.toggle("revealed", revealed);
   const routeHtml = current.route
     .map((hit, i) => {
       const hitValue = valueOf(hit);
@@ -132,7 +132,6 @@ function mark(known) {
 }
 
 el("newBtn").addEventListener("click", () => nextCard(false));
-el("revealBtn").addEventListener("click", () => { revealed = !revealed; render(); });
 el("easyBtn").addEventListener("click", () => mark(true));
 el("hardBtn").addEventListener("click", () => mark(false));
 el("shuffleBtn").addEventListener("click", () => { shuffleDeck(); nextCard(false); });
@@ -141,7 +140,7 @@ el("rangeSelect").addEventListener("change", applyRange);
 el("nextAfterCorrect").addEventListener("click", () => nextCard(true));
 
 document.addEventListener("keydown", (e) => {
-  if (e.code === "Space") { e.preventDefault(); revealed = !revealed; render(); }
+  if (e.code === "Space") { e.preventDefault(); flipCard(); }
   if (e.key.toLowerCase() === "n") nextCard(false);
   if (e.key === "1") mark(true);
   if (e.key === "2") mark(false);
@@ -149,3 +148,14 @@ document.addEventListener("keydown", (e) => {
 
 applyRange();
 nextCard(false);
+
+
+function flipCard() { revealed = !revealed; render(); }
+
+el("card").addEventListener("click", flipCard);
+el("card").addEventListener("keydown", (e) => {
+  if (e.key === "Enter" || e.key === " ") {
+    e.preventDefault();
+    flipCard();
+  }
+});

@@ -93,12 +93,35 @@
       }
 
       .flashcard {
+        background: transparent;
+        border: 0;
+        border-radius: var(--radius);
+        min-height: 480px;
+        perspective: 1200px;
+        cursor: pointer;
+      }
+
+      .flip-inner {
+        position: relative;
+        width: 100%;
+        min-height: 480px;
+        transition: transform 0.5s ease;
+        transform-style: preserve-3d;
+      }
+
+      .flashcard.revealed .flip-inner { transform: rotateY(180deg); }
+
+      .face {
+        position: absolute;
+        inset: 0;
+        backface-visibility: hidden;
         background: linear-gradient(180deg, var(--surface), #121212);
         border: 1px solid #2e2e2e;
         border-radius: var(--radius);
         padding: 1rem;
-        min-height: 480px;
       }
+
+      .back { transform: rotateY(180deg); }
 
       .target {
         font-size: clamp(2.2rem, 9vw, 4.6rem);
@@ -121,9 +144,7 @@
       .throw-main { font-size: 1.35rem; font-weight: 800; margin-top: 0.2rem; }
       .left { color: var(--orange-2); font-size: 1rem; margin-top: 0.2rem; }
 
-      .hidden .route { filter: blur(9px); pointer-events: none; user-select: none; }
-
-      .status {
+            .status {
         margin-top: 1rem;
         display: flex;
         justify-content: space-between;
@@ -167,14 +188,21 @@
           <option value="doubles">Double finishes (2-40)</option>
         </select>
         <button id="newBtn" class="primary">New Card</button>
-        <button id="revealBtn">Reveal / Hide</button>
-        <button id="easyBtn">Knew it ✅</button>
+                <button id="easyBtn">Knew it ✅</button>
         <button id="hardBtn">Missed it ❌</button>
       </div>
 
-      <section id="card" class="flashcard hidden">
-        <div class="target" id="target">—</div>
-        <div class="route" id="route"></div>
+      <section id="card" class="flashcard" role="button" tabindex="0" aria-label="Flash card. Press to flip.">
+        <div class="flip-inner">
+          <div class="face front">
+            <div class="throw-label">Checkout target</div>
+            <div class="target" id="target">—</div>
+            <div class="left">Tap card to flip</div>
+          </div>
+          <div class="face back">
+            <div class="route" id="route"></div>
+          </div>
+        </div>
       </section>
 
       <div class="answers">

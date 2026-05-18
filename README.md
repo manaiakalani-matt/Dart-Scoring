@@ -13,7 +13,7 @@ Open `index.html` in any browser.
   - hit target (`T20`, `D16`, `Bull`, etc.)
   - numerical value (`60`, `32`, `50`, etc.)
   - remaining score after the dart (e.g., `78 left`)
-- Reveal/hide answer flow to simulate flash cards.
+- Tap/click the card to flip between target and checkout route.
 - Score tracking (`Knew it` / `Missed it`).
 - Study ranges: all, pro zone, big finishes, doubles only.
 - Keyboard controls:
